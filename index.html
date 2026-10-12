@@ -40,9 +40,7 @@
         
         .controls-header:hover { background: #f0f0f0; }
         
-        .controls-header.open {
-            border-bottom: 1px solid #ddd;
-        }
+        .controls-header.open { border-bottom: 1px solid #ddd; }
 
         .controls-content {
             display: flex;
@@ -52,10 +50,7 @@
             align-items: center;
         }
 
-        /* Hide content when collapsed */
-        .collapsed {
-            display: none !important;
-        }
+        .collapsed { display: none !important; }
 
         .control-group {
             display: grid;
@@ -219,7 +214,7 @@
             toggleIcon.textContent = controlsContent.classList.contains('collapsed') ? '▲' : '▼';
         });
 
-        // Daylight Modes Logic (Two-color linear gradients mapping sky to horizon)
+        // Daylight Modes Logic
         const daylightSettings = {
             dawn:      { bg: 'linear-gradient(to bottom, #3a4066, #ffb7b2)', exposure: '0.6' },
             morning:   { bg: 'linear-gradient(to bottom, #82addb, #e2f3f9)', exposure: '0.9' },
@@ -239,14 +234,28 @@
         // Camera Controls Config
         const PAN_STEP = 0.5; 
         const ROT_STEP = 0.2; 
-        const ZOOM_STEP = 6.0; 
+        const ZOOM_STEP = 7.5; 
 
         viewer.addEventListener('load', () => {
             
-            // Pan logic
-            const updatePan = (dx, dy) => {
+            // Dynamic Camera-Relative Pan Logic
+            const updatePan = (panX, panY) => {
                 const target = viewer.getCameraTarget();
-                viewer.cameraTarget = `${target.x + dx}m ${target.y + dy}m ${target.z}m`;
+                const orbit = viewer.getCameraOrbit();
+                
+                // orbit.theta is the camera's rotation around the Y axis
+                const theta = orbit.theta;
+                
+                // Calculate the direction perpendicular to the camera's look direction
+                const rightX = Math.cos(theta);
+                const rightZ = -Math.sin(theta);
+                
+                // Move the target along that perpendicular line for left/right, and along Y for up/down
+                const newX = target.x + (panX * rightX);
+                const newY = target.y + panY;
+                const newZ = target.z + (panX * rightZ);
+                
+                viewer.cameraTarget = `${newX}m ${newY}m ${newZ}m`;
             };
 
             document.querySelector('#pan-up').onclick = () => updatePan(0, PAN_STEP);

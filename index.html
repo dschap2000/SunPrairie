@@ -81,14 +81,14 @@
             height: 45px;
             background: transparent;
             border: 2px dashed #aaa;
-            border-radius: 50px; /* Makes it a pill/circle shape */
+            border-radius: 50px;
             padding: 3px;
             box-sizing: border-box;
             position: relative;
         }
         
         .rotate-track button {
-            border-radius: 50%; /* Make buttons circular */
+            border-radius: 50%; 
             width: 36px;
             height: 36px;
             z-index: 2;
@@ -106,11 +106,11 @@
     </style>
 </head>
 <body>
+    <!-- Removed auto-rotate from model-viewer -->
     <model-viewer 
       id="shelter-viewer"
       src="SP_Bus_Stop_Final.glb" 
       alt="Interactive 3D model of the Sun Prairie bus shelter" 
-      auto-rotate 
       camera-controls 
       shadow-intensity="1"
       min-camera-orbit="auto auto 0m">
@@ -130,33 +130,27 @@
         <div class="section-label">Rotate</div>
         <div class="rotate-track">
             <button id="rot-left" title="Rotate Left">
-                <!-- Circular arrow pointing left -->
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" opacity="0"/><path d="M7.11 8.53L5.7 7.11C4.06 8.75 3 11.07 3 13.62c0 4.67 3.58 8.51 8.13 8.97v-2.02c-3.41-.45-6.13-3.37-6.13-6.95 0-1.92.78-3.66 2.04-4.93L8.5 10V4H2.5l2.6 2.6c-1.89 2.06-3.1 4.82-3.1 7.84 0 5.86 4.41 10.68 10 11.48v-2.02C6.46 23.4 2 18.89 2 13.44c0-2.88 1.13-5.49 2.97-7.43L2.5 3.54V9.5h5.96l-1.35-1.35zM22 10.56c0-5.86-4.41-10.68-10-11.48v2.02c4.54.46 8 3.97 8 8.46 0 1.92-.78 3.66-2.04 4.93L15.5 13v6h6l-2.6-2.6c1.89-2.06 3.1-4.82 3.1-7.84z"/></svg>
             </button>
             <button id="rot-right" title="Rotate Right">
-                <!-- Circular arrow pointing right -->
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" opacity="0"/><path d="M16.89 8.53l1.41-1.42C19.94 8.75 21 11.07 21 13.62c0 4.67-3.58 8.51-8.13 8.97v-2.02c3.41-.45 6.13-3.37 6.13-6.95 0-1.92-.78-3.66-2.04-4.93L15.5 10V4h6l-2.6 2.6c1.89 2.06 3.1 4.82 3.1 7.84 0 5.86-4.41 10.68-10 11.48v-2.02c4.54-.46 8-3.97 8-8.46 0-2.88-1.13-5.49-2.97-7.43l2.47-2.47V9.5h-5.96l1.35-1.35zM2 10.56c0 5.86 4.41 10.68 10 11.48v-2.02c-4.54-.46-8-3.97-8-8.46 0-1.92.78-3.66 2.04-4.93L8.5 13v-6h-6l2.6 2.6C3.21 7.54 2 10.3 2 13.32z"/></svg>
             </button>
         </div>
 
         <div class="section-label">Zoom</div>
         <div class="linear">
-            <!-- Swapped minus and plus -->
             <button id="zoom-out" title="Zoom Out">－</button>
             <button id="zoom-in" title="Zoom In">＋</button>
         </div>
     </div>
 
-    <!-- Script to drive the camera from the buttons -->
     <script>
         const viewer = document.querySelector('#shelter-viewer');
 
-        // Tune these numbers to make the buttons move faster or slower
-        const PAN_STEP = 0.5; // distance in meters
-        const ROT_STEP = 0.2; // rotation in radians
-        const ZOOM_STEP = 1.0; // zoom distance in meters
+        const PAN_STEP = 0.5; 
+        const ROT_STEP = 0.2; 
+        const ZOOM_STEP = 3.0; // Increased to make the zoom button steps larger
 
-        // Wait for model to load so it has accurate starting targets
         viewer.addEventListener('load', () => {
             
             // Pan logic
@@ -170,7 +164,6 @@
             document.querySelector('#pan-left').onclick = () => updatePan(-PAN_STEP, 0);
             document.querySelector('#pan-right').onclick = () => updatePan(PAN_STEP, 0);
             
-            // Reset to default center
             document.querySelector('#pan-center').onclick = () => {
                 viewer.cameraTarget = 'auto auto auto';
             };
@@ -187,7 +180,6 @@
             // Zoom logic
             const updateZoom = (dRadius) => {
                 const orbit = viewer.getCameraOrbit();
-                // Math.max prevents the camera from inverting if they zoom in past 0
                 const newRadius = Math.max(orbit.radius + dRadius, 0.1); 
                 viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${newRadius}m`;
             };

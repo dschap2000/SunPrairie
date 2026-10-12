@@ -6,7 +6,7 @@
     <title>Sun Prairie Bus Shelter</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; background-color: #e0f6ff; overflow: hidden; font-family: sans-serif; transition: background-color 0.5s ease; }
+        body { margin: 0; padding: 0; background: linear-gradient(to bottom, #3a8ded, #c3e0ec); overflow: hidden; font-family: sans-serif; height: 100vh; }
         model-viewer { width: 100vw; height: 100vh; }
 
         /* Floating Google Earth-style control panel */
@@ -219,20 +219,20 @@
             toggleIcon.textContent = controlsContent.classList.contains('collapsed') ? '▲' : '▼';
         });
 
-        // Daylight Modes Logic
+        // Daylight Modes Logic (Two-color linear gradients mapping sky to horizon)
         const daylightSettings = {
-            dawn:      { bg: '#ffb7b2', exposure: '0.6' },
-            morning:   { bg: '#87CEEB', exposure: '0.9' },
-            midday:    { bg: '#e0f6ff', exposure: '1.1' },
-            afternoon: { bg: '#b2c8d8', exposure: '1.0' },
-            evening:   { bg: '#fdc577', exposure: '0.8' },
-            dusk:      { bg: '#2c3e50', exposure: '0.4' }
+            dawn:      { bg: 'linear-gradient(to bottom, #3a4066, #ffb7b2)', exposure: '0.6' },
+            morning:   { bg: 'linear-gradient(to bottom, #82addb, #e2f3f9)', exposure: '0.9' },
+            midday:    { bg: 'linear-gradient(to bottom, #3a8ded, #c3e0ec)', exposure: '1.1' },
+            afternoon: { bg: 'linear-gradient(to bottom, #5b79a2, #d1d8e0)', exposure: '1.0' },
+            evening:   { bg: 'linear-gradient(to bottom, #2b4162, #fa9c7a)', exposure: '0.8' },
+            dusk:      { bg: 'linear-gradient(to bottom, #0f2027, #203a43)', exposure: '0.4' }
         };
 
         document.querySelector('#daylight-select').addEventListener('change', (e) => {
             const mode = e.target.value;
             const settings = daylightSettings[mode];
-            document.body.style.backgroundColor = settings.bg;
+            document.body.style.background = settings.bg;
             viewer.exposure = settings.exposure;
         });
 
